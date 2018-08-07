@@ -26,6 +26,7 @@ var triviaData = [
           "Amazon River",
           "Hunang He",
       ],
+      fact: "Amazon River is the 2nd logest at 4,049 miles",
       answer: 2,
     },
 
@@ -36,6 +37,7 @@ var triviaData = [
           "Russian",
           "Portuguese",
       ],
+      fact: "German is the 10th most spoken language in the world. Cheers!",
       answer: 0,
     },
 
@@ -46,6 +48,7 @@ var triviaData = [
           "Voted world's best place to live",
           "Countries with the least crime",
       ],
+      fact: "Neither country has an army.",
       answer: 0,
     },
 
@@ -56,6 +59,7 @@ var triviaData = [
           "Afghanistan",
           "El Salvador",
       ],
+      fact: "Correct asnwer is Taiwan.",
       answer: 1,
     },
 
@@ -66,6 +70,7 @@ var triviaData = [
           "Russia",
           "Indonesia",
       ],
+      fact: "Indonesia has the second longest coast line.",
       answer: 3,
     },
 
@@ -76,6 +81,7 @@ var triviaData = [
           "Guatemala",
           "Mongolia",
       ],
+      fact: "Libya's official name is 'Al Jumahiriyah al Arabiyah al Libiyah ash Shabiyah al Ishtirakiyah al Uzma'",
       answer: 0,
     },
 
@@ -86,6 +92,7 @@ var triviaData = [
           "85,000",
           "57,000",
       ],
+      fact: "The correct answer is 57,000 (56,370 to be exact)",
       answer: 3,
     },
 
@@ -96,6 +103,7 @@ var triviaData = [
           "Hamilton",
           "Napier-Hastings",
       ],
+      fact: "The answser is Wellington.",
       answer: 1,
     },
 
@@ -106,9 +114,12 @@ var triviaData = [
           "Slovakia",
           "Croatia",
       ],
+      fact: "The answer is Croatia.",
       answer: 3,
     },
 ];
+
+// Object holding all other game data other than Trivia questions/answers.
 
 var userData = {
     corrects: 0,
@@ -148,23 +159,35 @@ function isCorrect(userChoice) {
     }
 }
 
+function clearAnswer() {
+    $("#displayAnswer").modal('hide');
+}
+
+// ToDo: should I use Bootstrap modal?
 function drawAnswer(isCorrect) {
-    var msg = "";
+    clearInterval(userData.refTimeSecDisplay);  // Pause timer display
 
     if (isCorrect) {
-        msg += "You are correct";
+        $("#yourAnswerIs").text("Your answer is CORRECT");
+    } else if (isCorrect == undefined) {
+        $("#yourAnswerIs").text("Time's UP!");
     } else {
-        msg += "You are incorect";
+        $("#yourAnswerIs").text("Your answer is INCORRECT");
     }
+    $(".modal-body").text(userData.currentQuestion.fact);
 
-    msg += `\t\t The answer is ${ userData.currentQuestion.choices[ userData.currentQuestion.answer ] }`;
-
-    console.log(msg);
+    $("#displayAnswer").modal('show');
 }
 
 function drawTimer() {
-    userData.timerSecDisplay--;
-    $("#timer").text(`Time Remaining: ${userData.timerSecDisplay}`);
+    if (userData.timerSecDisplay > 0) {
+        userData.timerSecDisplay--;
+        $("#timer").text(`Time Remaining: ${userData.timerSecDisplay}`);
+    }
+}
+
+function drawFinalResult() {
+
 
 }
 
@@ -187,7 +210,11 @@ function timeUp() {
     drawAnswer();
     console.log("Timer is up.  Getting next question");
     userData.unanswered++;
-    loadNextQuestion();
+
+    setTimeout(function() {
+        clearAnswer();
+        loadNextQuestion();
+    }, 5000);
 }
 
 function loadNextQuestion() {
@@ -203,13 +230,17 @@ function loadNextQuestion() {
         console.log("Final Results are:");
         console.log(userData);
         // ToDo:  Call game end display here
+
+        drawFinalResult();
     }
 }
 
+// main game program block
 $(document).ready( function() {
 
-
     // To do: Draw 'Click on Start' Screen
+
+    // Initial loading and screen draw
     initializeUserData();
     loadNextQuestion();
 
@@ -224,15 +255,16 @@ $(document).ready( function() {
         if(gotAnswer) {
             console.log("Got Correct answer");
             userData.corrects++;
-            drawAnswer();
         } else {
             console.log("Got Wrong answer");
             userData.incorrects++;
-            drawAnswer();
         }
+        drawAnswer(gotAnswer);
 
-        loadNextQuestion();
-
+        setTimeout(function() {
+            clearAnswer();
+            loadNextQuestion();
+        }, 5000);
     });
 
 });
