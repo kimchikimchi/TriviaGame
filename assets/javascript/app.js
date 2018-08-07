@@ -40,7 +40,7 @@ var triviaData = [
       fact: "German is the 10th most spoken language in the world. Cheers!",
       answer: 0,
     },
-
+/*
     { question: "What do Grenada and Costa Rica have in common?",
       choices: [
           "They have no army",
@@ -117,6 +117,7 @@ var triviaData = [
       fact: "The answer is Croatia.",
       answer: 3,
     },
+*/
 ];
 
 // Object holding all other game data other than Trivia questions/answers.
@@ -187,8 +188,17 @@ function drawTimer() {
 }
 
 function drawFinalResult() {
+    console.log("Game End");
+    console.log("Final Results are:");
+    console.log(userData);
 
-
+    $(".modal-body").append(
+        $("<div>").text(`Corrects: ${userData.corrects}`),
+        $("<div>").text(`Incorrects: ${userData.incorrects}`),
+        $("<div>").text(`Unanswered: ${userData.corrects}`),
+    )
+    
+    $("#displayAnswer").modal('show');
 }
 
 function nextQuestion() {
@@ -221,16 +231,13 @@ function loadNextQuestion() {
     console.log("===================================");
     clearTimeout(userData.refTimer);
     userData.currentQuestion = nextQuestion();
+
+    // currentQuention is null at the end of game.
     if (userData.currentQuestion) {
         drawQuestionChoices(userData.currentQuestion);
         resetCountdownDisplay();
         userData.refTimer = setTimeout(timeUp, userData.timer);
     } else {
-        console.log("Game End");
-        console.log("Final Results are:");
-        console.log(userData);
-        // ToDo:  Call game end display here
-
         drawFinalResult();
     }
 }
