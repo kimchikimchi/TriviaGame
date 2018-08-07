@@ -116,9 +116,10 @@ var userData = {
     unanswered: 0,
     timer: 30000,                       // Internal clock before next question
     refTimer: undefined,                // Store internal time out
-    timerSecDisplay: undefined,         // User display timer in secs before next question
+    timerSecDisplay: undefined,         // User display timer in secs before next question,
+                                        // calculated in secs of 'timer' value at start.
     refTimeSecDisplay: undefined,       // Store user-facing timer interval
-    currentQuestion: undefined,
+    currentQuestion: undefined,         // Holds copy of currently displayed question.
 };
 
 // Initial screen should zero out all entries in userData.
@@ -135,7 +136,7 @@ function drawQuestionChoices(current) {
     console.log("Drawing question and choices");
     $("#question").text( current.question );
     for(var index=0; index< current.choices.length; index++) {
-        $("#choice"+index).text( current.choices[index]);
+        $("#choice"+index).text( current.choices[index] );
     }
 }
 
@@ -147,7 +148,7 @@ function isCorrect(userChoice) {
     }
 }
 
-function drawAnswer(current, isCorrect) {
+function drawAnswer(isCorrect) {
     var msg = "";
 
     if (isCorrect) {
@@ -156,7 +157,9 @@ function drawAnswer(current, isCorrect) {
         msg += "You are incorect";
     }
 
-    msg += "\t\t The answer is ${ current.choices[current.answer] }";
+    msg += `\t\t The answer is ${ userData.currentQuestion.choices[ userData.currentQuestion.answer ] }`;
+
+    console.log(msg);
 }
 
 function drawTimer() {
@@ -181,6 +184,7 @@ function resetCountdownDisplay() {
 }
 
 function timeUp() {
+    drawAnswer();
     console.log("Timer is up.  Getting next question");
     userData.unanswered++;
     loadNextQuestion();
@@ -190,11 +194,17 @@ function loadNextQuestion() {
     console.log("===================================");
     clearTimeout(userData.refTimer);
     userData.currentQuestion = nextQuestion();
-    drawQuestionChoices(userData.currentQuestion);
-    resetCountdownDisplay();
-    userData.refTimer = setTimeout(timeUp, userData.timer);
+    if (userData.currentQuestion) {
+        drawQuestionChoices(userData.currentQuestion);
+        resetCountdownDisplay();
+        userData.refTimer = setTimeout(timeUp, userData.timer);
+    } else {
+        console.log("Game End");
+        console.log("Final Results are:");
+        console.log(userData);
+        // ToDo:  Call game end display here
+    }
 }
-
 
 $(document).ready( function() {
 
@@ -214,9 +224,11 @@ $(document).ready( function() {
         if(gotAnswer) {
             console.log("Got Correct answer");
             userData.corrects++;
+            drawAnswer();
         } else {
             console.log("Got Wrong answer");
             userData.incorrects++;
+            drawAnswer();
         }
 
         loadNextQuestion();
