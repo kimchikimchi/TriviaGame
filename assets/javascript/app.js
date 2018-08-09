@@ -249,7 +249,7 @@ $(document).ready( function() {
     $("#pressStart").click(function() {
         console.log('start button pressed');
         // Show only gameplay screen.
-        $("#start").attr("display","none");
+        $("#start").css("display","none");
 
 
         // Initial loading and screen draw
