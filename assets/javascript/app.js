@@ -197,15 +197,13 @@ function drawFinalResult() {
     $(".modal-body").empty();
     $(".modal-body").text("final");
 
-    /*
+
     $(".modal-body").append(
         $("<div>").text(`Corrects: ${userData.corrects}`),
         $("<div>").text(`Incorrects: ${userData.incorrects}`),
-        $("<div>").text(`Unanswered: ${userData.corrects}`)
-    );
+        $("<div>").text(`Unanswered: ${userData.corrects}`),
+    )
 
-    */
-    $("#displayAnswer").modal('hide');
     $("#displayAnswer").modal('show');
 
     console.log("After showing modal.");
@@ -252,20 +250,27 @@ function loadNextQuestion() {
     }
 }
 
+
 // main game program block
 $(document).ready( function() {
-
     // To do: Draw 'Click on Start' Screen
+    $("#pressStart").click(function() {
+        console.log('start button pressed');
+        // Show only gameplay screen.
+        $("#start").css("display","none");
 
-    // Initial loading and screen draw
-    initializeUserData();
-    loadNextQuestion();
+
+        // Initial loading and screen draw
+        initializeUserData();
+        loadNextQuestion();
+    });
+
 
     // Somewhere here I need to add event handler for clicking a choice
     $(".choice").click(function() {
         // If the end user makes a choice, determine whether it's a
         // correct or incorrect answer.
-        console.log("clicked");
+        console.log("choice clicked");
         var choice = $(this).data("value");
         var gotAnswer = isCorrect(choice);
 

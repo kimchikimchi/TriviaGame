@@ -1,0 +1,9 @@
+#gameplay, #start {
+    width: 800px;
+    height: 600px;
+}
+
+#start {
+    position: fixed;
+    top: 0px;
+}
