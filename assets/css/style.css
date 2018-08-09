@@ -1,9 +1,9 @@
-#gameplay, #start {
+#gameplay, #start, #displayResults{
     width: 800px;
     height: 600px;
 }
 
-#start {
+#start, #displayResults {
     position: fixed;
     top: 0px;
 }

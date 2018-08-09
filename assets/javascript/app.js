@@ -40,7 +40,7 @@ var triviaData = [
       fact: "German is the 10th most spoken language in the world. Cheers!",
       answer: 0,
     },
-/*
+
     { question: "What do Grenada and Costa Rica have in common?",
       choices: [
           "They have no army",
@@ -117,7 +117,7 @@ var triviaData = [
       fact: "The answer is Croatia.",
       answer: 3,
     },
-*/
+
 ];
 
 // Object holding all other game data other than Trivia questions/answers.
@@ -132,6 +132,7 @@ var userData = {
                                         // calculated in secs of 'timer' value at start.
     refTimeSecDisplay: undefined,       // Store user-facing timer interval
     currentQuestion: undefined,         // Holds copy of currently displayed question.
+    currentQuestionNum: 0,
 };
 
 // Initial screen should zero out all entries in userData.
@@ -175,7 +176,7 @@ function drawAnswer(isCorrect) {
     } else {
         $("#yourAnswerIs").text("Your answer is INCORRECT");
     }
-    $(".modal-body").text(userData.currentQuestion.fact);
+    $("#funFacts").text(userData.currentQuestion.fact);
 
     $("#displayAnswer").modal('show');
 }
@@ -188,31 +189,33 @@ function drawTimer() {
 }
 
 function drawFinalResult() {
+    $("#gameplay").css("display", "none");
+
     console.log("Game End");
     console.log("Final Results are:");
     console.log(userData);
 
+    $("#yourResultIs").text("Here is your final result");
+    $("#triviaResults").empty();
 
-    $("#yourAnswerIs").text("Here is your final result");
-    $(".modal-body").empty();
-    $(".modal-body").text("final");
-
-
-    $(".modal-body").append(
+    $("#triviaResults").append(
         $("<div>").text(`Corrects: ${userData.corrects}`),
         $("<div>").text(`Incorrects: ${userData.incorrects}`),
         $("<div>").text(`Unanswered: ${userData.corrects}`),
     )
 
-    $("#displayAnswer").modal('show');
+    // Should use another div to hold the final result.
+    $("#displayResults").css("display", "block");
 
     console.log("After showing modal.");
 }
 
 function nextQuestion() {
+    var nextQuestion = triviaData[ userData.currentQuestionNum ];
     console.log("Loading the next question");
-    console.log(triviaData[0]);
-    return triviaData.shift();
+    console.log(nextQuestion);
+    userData.currentQuestionNum++;
+    return nextQuestion;
 }
 
 // Start internal countdown as well as display ticking timer on GUI
@@ -253,11 +256,14 @@ function loadNextQuestion() {
 
 // main game program block
 $(document).ready( function() {
+    $("#displayResults").css("display", "none");
+
     // To do: Draw 'Click on Start' Screen
     $("#pressStart").click(function() {
         console.log('start button pressed');
         // Show only gameplay screen.
         $("#start").css("display","none");
+        //$("#displayResults").css("display", "none");
 
 
         // Initial loading and screen draw
