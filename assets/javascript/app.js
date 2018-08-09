@@ -126,7 +126,7 @@ var userData = {
     corrects: 0,
     incorrects: 0,
     unanswered: 0,
-    timer: 30000,                       // Internal clock before next question
+    timer: 5000,                       // Internal clock before next question
     refTimer: undefined,                // Store internal time out
     timerSecDisplay: undefined,         // User display timer in secs before next question,
                                         // calculated in secs of 'timer' value at start.
@@ -192,13 +192,23 @@ function drawFinalResult() {
     console.log("Final Results are:");
     console.log(userData);
 
+
+    $("#yourAnswerIs").text("Here is your final result");
+    $(".modal-body").empty();
+    $(".modal-body").text("final");
+
+    /*
     $(".modal-body").append(
         $("<div>").text(`Corrects: ${userData.corrects}`),
         $("<div>").text(`Incorrects: ${userData.incorrects}`),
-        $("<div>").text(`Unanswered: ${userData.corrects}`),
-    )
-    
+        $("<div>").text(`Unanswered: ${userData.corrects}`)
+    );
+
+    */
+    $("#displayAnswer").modal('hide');
     $("#displayAnswer").modal('show');
+
+    console.log("After showing modal.");
 }
 
 function nextQuestion() {
@@ -224,7 +234,7 @@ function timeUp() {
     setTimeout(function() {
         clearAnswer();
         loadNextQuestion();
-    }, 5000);
+    }, 1000);
 }
 
 function loadNextQuestion() {
@@ -271,7 +281,7 @@ $(document).ready( function() {
         setTimeout(function() {
             clearAnswer();
             loadNextQuestion();
-        }, 5000);
+        }, 1000);
     });
 
 });
