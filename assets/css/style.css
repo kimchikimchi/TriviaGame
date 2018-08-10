@@ -1,9 +1,8 @@
-#gameplay, #start, #displayResults{
+// Overlapping all three screens on top of each other.
+// Use display: block/hide in JS to show only one at a time.
+#displayQuestion, #displayStart, #displayResults{
     width: 800px;
     height: 600px;
-}
-
-#start, #displayResults {
     position: fixed;
     top: 0px;
 }

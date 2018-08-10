@@ -13,7 +13,8 @@
 
         <div class="container">
 
-            <div class="jumbotron" id="gameplay">
+            <!-- Main Trivia Game Screen with Question and Multiple Choices  -->
+            <div class="jumbotron" id="displayQuestion">
               <h1 class="display-4">Geography Trivia Game</h1>
               <p class="lead" id="question">Question here</p>
               <hr class="my-4">
@@ -24,56 +25,31 @@
               <a class="btn btn-primary btn-lg choice" id="choice3" href="#" role="button" data-value="3">Choice 4</a>
             </div>
 
-
-            <div class="jumbotron" id="start">
-              <h1 class="display-4">Geography Trivia Game</h1>
-
-
-              <a class="btn btn-primary btn-lg" id="pressStart" href="#" role="button">PRESS to START</a>
-            </div>
-                        <!-- Button trigger modal -->
-            <!--
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
-              Launch demo modal
-            </button>
-            -->
-
-            <!-- Modal.  Displays Answer -->
+            <!-- Modal.  Displays the Answer after Each Question -->
             <div class="modal fade" id="displayAnswer" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
               <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                   <div class="modal-header">
                     <h5 class="modal-title" id="yourAnswerIs"></h5>
-                    <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                    -->
                   </div>
                   <div class="modal-body" id="funFacts">
                     ...
                   </div>
-                  <!--
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                  </div>
-                  -->
                 </div>
               </div>
             </div>
 
+            <div class="jumbotron" id="displayStart">
+              <h1 class="display-4">Geography Trivia Game</h1>
+              <a class="btn btn-primary btn-lg" id="pressStart" href="#" role="button">PRESS to START</a>
+            </div>
 
             <!-- Result Page.  Dipslays after all quetions -->
             <div class="jumbotron" id="displayResults">
                 <h1 class="display-4" id>Here is your final result</h1>
-                <!--
-                <a class="btn btn-primary btn-lg" id="pressStart" href="#" role="button">PRESS to START</a>
-                -->
-                <div class="modal-body" id="triviaResults">
-                                        ...
-                </div>
+                <div class="modal-body" id="triviaResults"></div>
+                <a class="btn btn-primary btn-lg" id="restartButton" href="#" role="button">PRESS to RESTART</a>
             </div>
-
         </div>
 
         <!-- JQuery and JS Imort -->
@@ -84,7 +60,6 @@
         <!-- Game Logic -->
         <script type="text/javascript" src="assets/javascript/app.js">
         </script>
-
 
     </body>
 </html>

@@ -40,7 +40,7 @@ var triviaData = [
       fact: "German is the 10th most spoken language in the world. Cheers!",
       answer: 0,
     },
-
+/*
     { question: "What do Grenada and Costa Rica have in common?",
       choices: [
           "They have no army",
@@ -117,7 +117,7 @@ var triviaData = [
       fact: "The answer is Croatia.",
       answer: 3,
     },
-
+*/
 ];
 
 // Object holding all other game data other than Trivia questions/answers.
@@ -135,14 +135,13 @@ var userData = {
     currentQuestionNum: 0,
 };
 
-// Initial screen should zero out all entries in userData.
-
+// Zero out game data before (re-)starting.
 function initializeUserData() {
     userData.corrects = 0;
     userData.incorrects = 0;
     userData.unanswered = 0;
+    userData.currentQuestionNum = 0;
 }
-
 
 // Draw screen for each question and choices
 function drawQuestionChoices(current) {
@@ -153,6 +152,7 @@ function drawQuestionChoices(current) {
     }
 }
 
+// returns whether the user got the answser right
 function isCorrect(userChoice) {
     if (userData.currentQuestion.answer === parseInt(userChoice)) {
         return true;
@@ -165,9 +165,10 @@ function clearAnswer() {
     $("#displayAnswer").modal('hide');
 }
 
-// ToDo: should I use Bootstrap modal?
+// Let user know whether he got the answer right.
 function drawAnswer(isCorrect) {
-    clearInterval(userData.refTimeSecDisplay);  // Pause timer display
+    // Pause timer display
+    clearInterval(userData.refTimeSecDisplay);
 
     if (isCorrect) {
         $("#yourAnswerIs").text("Your answer is CORRECT");
@@ -176,21 +177,13 @@ function drawAnswer(isCorrect) {
     } else {
         $("#yourAnswerIs").text("Your answer is INCORRECT");
     }
-    $("#funFacts").text(userData.currentQuestion.fact);
 
+    $("#funFacts").text(userData.currentQuestion.fact);
     $("#displayAnswer").modal('show');
 }
 
-function drawTimer() {
-    if (userData.timerSecDisplay > 0) {
-        userData.timerSecDisplay--;
-        $("#timer").text(`Time Remaining: ${userData.timerSecDisplay}`);
-    }
-}
-
+// Show the user his trivia result.
 function drawFinalResult() {
-    $("#gameplay").css("display", "none");
-
     console.log("Game End");
     console.log("Final Results are:");
     console.log(userData);
@@ -201,15 +194,24 @@ function drawFinalResult() {
     $("#triviaResults").append(
         $("<div>").text(`Corrects: ${userData.corrects}`),
         $("<div>").text(`Incorrects: ${userData.incorrects}`),
-        $("<div>").text(`Unanswered: ${userData.corrects}`),
+        $("<div>").text(`Unanswered: ${userData.unanswered}`),
     )
 
     // Should use another div to hold the final result.
+    $("#displayStart").css("display", "none");
+    $("#displayQuestion").css("display", "none");
     $("#displayResults").css("display", "block");
-
-    console.log("After showing modal.");
 }
 
+// Count down user facing timer.
+function drawTimer() {
+    if (userData.timerSecDisplay > 0) {
+        userData.timerSecDisplay--;
+        $("#timer").text(`Time Remaining: ${userData.timerSecDisplay}`);
+    }
+}
+
+// Look and and return next question object.
 function nextQuestion() {
     var nextQuestion = triviaData[ userData.currentQuestionNum ];
     console.log("Loading the next question");
@@ -219,7 +221,6 @@ function nextQuestion() {
 }
 
 // Start internal countdown as well as display ticking timer on GUI
-
 function resetCountdownDisplay() {
     clearInterval(userData.refTimeSecDisplay);
     console.log("Resetting internal and user display timer");
@@ -240,14 +241,14 @@ function timeUp() {
 
 function loadNextQuestion() {
     console.log("===================================");
-    clearTimeout(userData.refTimer);
     userData.currentQuestion = nextQuestion();
+    clearTimeout(userData.refTimer);
 
-    // currentQuention is null at the end of game.
     if (userData.currentQuestion) {
         drawQuestionChoices(userData.currentQuestion);
         resetCountdownDisplay();
         userData.refTimer = setTimeout(timeUp, userData.timer);
+    // currentQuention is null at the end of game.
     } else {
         drawFinalResult();
     }
@@ -259,16 +260,16 @@ $(document).ready( function() {
     $("#displayResults").css("display", "none");
 
     // To do: Draw 'Click on Start' Screen
-    $("#pressStart").click(function() {
+    $("#pressStart, #restartButton").click(function() {
         console.log('start button pressed');
-        // Show only gameplay screen.
-        $("#start").css("display","none");
-        //$("#displayResults").css("display", "none");
-
 
         // Initial loading and screen draw
         initializeUserData();
         loadNextQuestion();
+
+        $("#displayResults").css("display", "none");
+        $("#displayStart").css("display","none");
+        $("#displayQuestion").css("display", "block");
     });
 
 
@@ -276,17 +277,17 @@ $(document).ready( function() {
     $(".choice").click(function() {
         // If the end user makes a choice, determine whether it's a
         // correct or incorrect answer.
-        console.log("choice clicked");
         var choice = $(this).data("value");
         var gotAnswer = isCorrect(choice);
 
+        console.log('choice clicked' + choice);
+
         if(gotAnswer) {
-            console.log("Got Correct answer");
             userData.corrects++;
         } else {
-            console.log("Got Wrong answer");
             userData.incorrects++;
         }
+
         drawAnswer(gotAnswer);
 
         setTimeout(function() {
@@ -294,5 +295,4 @@ $(document).ready( function() {
             loadNextQuestion();
         }, 1000);
     });
-
 });
