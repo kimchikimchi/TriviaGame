@@ -40,7 +40,7 @@ var triviaData = [
       fact: "German is the 10th most spoken language in the world. Cheers!",
       answer: 0,
     },
-/*
+
     { question: "What do Grenada and Costa Rica have in common?",
       choices: [
           "They have no army",
@@ -117,7 +117,7 @@ var triviaData = [
       fact: "The answer is Croatia.",
       answer: 3,
     },
-*/
+
 ];
 
 // Object holding all other game data other than Trivia questions/answers.
@@ -126,11 +126,12 @@ var userData = {
     corrects: 0,
     incorrects: 0,
     unanswered: 0,
-    timer: 5000,                       // Internal clock before next question
+    timer: 20000,                       // Internal clock before next question
     refTimer: undefined,                // Store internal time out
     timerSecDisplay: undefined,         // User display timer in secs before next question,
                                         // calculated in secs of 'timer' value at start.
     refTimeSecDisplay: undefined,       // Store user-facing timer interval
+    refAnswerModalTimer: undefined,     // Stores timer for showing answer modal
     currentQuestion: undefined,         // Holds copy of currently displayed question.
     currentQuestionNum: 0,
 };
@@ -230,13 +231,14 @@ function resetCountdownDisplay() {
 
 function timeUp() {
     drawAnswer();
+    clearTimeout(userData.refAnswerModalTimer);
     console.log("Timer is up.  Getting next question");
     userData.unanswered++;
 
-    setTimeout(function() {
+    userData.refAnswerModalTimer = setTimeout(function() {
         clearAnswer();
         loadNextQuestion();
-    }, 1000);
+    }, 4000);
 }
 
 function loadNextQuestion() {
@@ -258,6 +260,8 @@ function loadNextQuestion() {
 // main game program block
 $(document).ready( function() {
     $("#displayResults").css("display", "none");
+    $("#displayStart").css("display","block");
+    $("#displayQuestion").css("display", "none");
 
     // To do: Draw 'Click on Start' Screen
     $("#pressStart, #restartButton").click(function() {
@@ -275,12 +279,13 @@ $(document).ready( function() {
 
     // Somewhere here I need to add event handler for clicking a choice
     $(".choice").click(function() {
+        clearTimeout(userData.refAnswerModalTimer);
         // If the end user makes a choice, determine whether it's a
         // correct or incorrect answer.
         var choice = $(this).data("value");
         var gotAnswer = isCorrect(choice);
 
-        console.log('choice clicked' + choice);
+        console.log('choice clicked: ' + choice);
 
         if(gotAnswer) {
             userData.corrects++;
@@ -290,9 +295,9 @@ $(document).ready( function() {
 
         drawAnswer(gotAnswer);
 
-        setTimeout(function() {
+        userData.refAnswerModalTimer = setTimeout(function() {
             clearAnswer();
             loadNextQuestion();
-        }, 1000);
+        }, 4000);
     });
 });
